@@ -2,6 +2,7 @@
 
 @section('content') 
 
+
     <div class="row">
         <div class="col-sm-8">
             <div class="card-box">
@@ -28,15 +29,49 @@
 
     <div class="row">
         <div class="col-sm-12">
-        {{ Form::open(array('url' => '/clientes/detalle', 'class' => ' form-inline')) }}
+        {{ Form::open(array('id' => 'form', 'url' => '/clientes/detalle', 'class' => ' form-inline')) }}
+
+            <input id="field" type="hidden" name="action" value="">
+
+            <input  type="hidden" name="current_id" value="{{ $id }}">
 
             <div class="form-group col-sm-6" style="padding-left:0">
-                {{ Form::select('id', $select, '', ['class' => 'form-control select2 mx-sm-8'])   }}
+                {{ Form::select('id', $select, 1956, ['class' => 'form-control select2 mx-sm-8'])   }}
+
             </div>
 
-            {{ Form::submit(trans('nacex-analytics.CLIENT_SELECT_BTN'), ['class' => 'btn btn-primary']) }}
+            <button class="btn btn-primary" 
+                    style="margin-left:5px;"
+                    onclick="
+                    getElementById('field').value='GET';
+                    getElementById('form').submit();
+                    ">{{ trans('nacex-analytics.CLIENT_SELECT_BTN') }}
+            </button>                               
+
+            <button class="btn btn-primary" 
+                    style="margin-left:5px;"
+                    onclick="
+                    $('select').val('{{ $prev_id }}').trigger('change');
+                    getElementById('field').value='PRE';
+                    getElementById('form').submit();
+                    ">
+                <i class="fa fa-reply"></i>
+            </button>                               
+
+            <button class="btn btn-primary" 
+                    style="margin-left:5px;"
+                    onclick="
+                    $('select').val('{{ $post_id }}').trigger('change');
+                    getElementById('field').value='POST';
+                    getElementById('form').submit();
+                    ">
+                <i class="fa fa-share"></i>
+            </button>                               
+
 
         {{ Form::close() }}
+
+
         </div>
     </div>
 

@@ -116,37 +116,13 @@ if ((float)$item->year1 > (float)$item->year2)
         <script src="{{ asset('assets/plugins/datatables/vfs_fonts.js') }}"></script>
         <script src="{{ asset('assets/plugins/datatables/buttons.html5.min.js') }}"></script>
         <script src="{{ asset('assets/plugins/datatables/buttons.print.min.js') }}"></script>
+        <script src="{{ asset('assets/pages/jquery.init_data_tables.js') }}"></script>
 
         <script type="text/javascript">
             $(document).ready(function() {
 
-                // Default Datatable
-                $('#datatable').DataTable();
+                axfInitDataTables();
 
-                //Buttons examples
-                var table = $('#datatable-buttons').DataTable({
-                    lengthChange: false,
-                    buttons: ['copy', 'excel', 'pdf']
-                });
-
-                // Key Tables
-
-                $('#key-table').DataTable({
-                    keys: true
-                });
-
-                // Responsive Datatable
-                $('#responsive-datatable').DataTable();
-
-                // Multi Selection Datatable
-                $('#selection-datatable').DataTable({
-                    select: {
-                        style: 'multi'
-                    }
-                });
-
-                table.buttons().container()
-                        .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
             } );
 
         </script>

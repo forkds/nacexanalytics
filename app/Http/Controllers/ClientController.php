@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Client;
 use App\Billing;
+use App\Office;
 
 class ClientController extends Controller
 {
@@ -50,8 +51,13 @@ class ClientController extends Controller
 
     public function postShow(Request $request)
     {
-        return $this->show($request->id);
+        $client_id = $request->id;
+
+        //$request->flashExcept('id');
+
+        return $this->show($client_id);
     }
+
    /**
      * Display the specified resource.
      *
@@ -105,6 +111,9 @@ class ClientController extends Controller
         $params['monthlyGraphLabel']  = $monthlyGraphLabel;
         $params['pageTitle']          = $pageTitle;
         $params['select']             = $this->toSelectByCode ($clients);
+        $params['id']                 = $id;
+        $params['prev_id']            = $this->getPrevId ($id);
+        $params['post_id']            = $this->getPostId ($id);
 
         // return view
         return view ('client', $params);
@@ -150,6 +159,28 @@ class ClientController extends Controller
         return $this->show($customerCode);
 
         //return 'search: ' . $customerCode . ".";
+
+    }
+
+    protected function getPostId ($id)
+    {
+        // get current office_id of the auth user
+        $office_id = \Auth::user()->getActiveOffice()->id;
+
+        $client = Office::find($office_id)->clients()->where('id', '>', $id)->first();
+
+        return $client->id;
+
+    }
+
+    protected function getPrevId ($id)
+    {
+        // get current office_id of the auth user
+        $office_id = \Auth::user()->getActiveOffice()->id;
+
+        $client = Office::find($office_id)->clients()->where('id', '<', $id)->orderby('id', 'desc')->first();
+        
+        return $client->id;
 
     }
 
