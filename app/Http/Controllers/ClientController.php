@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Client;
 use App\Billing;
 use App\Office;
+use App\Calendar;
 
 class ClientController extends Controller
 {
@@ -117,33 +118,6 @@ class ClientController extends Controller
 
         // return view
         return view ('client', $params);
-
-/*
-        $active_office = \Auth::user()->getActiveOffice();
-
-    	$rsBilling = new Billing;
-    	$dataMonth = $rsBilling->amountByMonthByIdOfficeIdCustomer($active_office->id, $id_customer);
-    	$dataYear  = $rsBilling->amountByYearByIdOfficeIdCustomer($active_office->id, $id_customer);
-
-    	$dataGraph = $this->getGraphDataByMonth ($dataYear, $dataMonth);
-
-        $rsClient  = new Client;
-        $customer     = $rsClient->show ($active_office->id, $id_customer);
-
-        $selectByCode = $this->toSelectByCode ($rsClient->indexByIdOffice($active_office->id));
-
-        $parameters = [];
-        $parameters['id'] = $active_office;
-        $parameters['dataMonth'] = $dataMonth;
-        $parameters['dataYear'] = $dataYear;
-        $parameters['dataGraph'] = $dataGraph;
-        $parameters['selectByCode'] = $selectByCode;
-        $parameters['customer'] = $customer->id_customer . '-' . $customer->name;
-
-
-    	return view ('client',$parameters);
-*/
-        //
     }
 
    /**
@@ -169,6 +143,11 @@ class ClientController extends Controller
 
         $client = Office::find($office_id)->clients()->where('id', '>', $id)->first();
 
+        if (!$client)
+        {
+            $client = Office::find($office_id)->clients()->orderby('id', 'asc')->first();
+        }
+
         return $client->id;
 
     }
@@ -180,6 +159,11 @@ class ClientController extends Controller
 
         $client = Office::find($office_id)->clients()->where('id', '<', $id)->orderby('id', 'desc')->first();
         
+        if (!$client)
+        {
+            $client = Office::find($office_id)->clients()->orderby('id', 'desc')->first();
+        }
+
         return $client->id;
 
     }

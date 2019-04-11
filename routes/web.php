@@ -33,6 +33,9 @@ Route::get('/clientes', 'ClientController@index');
 
 Route::post('/clientes/detalle', 'ClientController@postShow');
 
+Route::get('/clientes/comparativa', 'MonthlyClientController@index');
+
+
 Route::get('/cargar-archivo', 'LayoutController@upload')->middleware('role:manager');
 Route::get('/configuracion', 'UsuarioController@settings');
 Route::get('/configuracion-defecto', 'UsuarioController@emptySettings');

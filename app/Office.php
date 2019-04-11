@@ -21,4 +21,9 @@ class Office extends Model
 	{
   		return $this->hasMany(Client::class);
   	}
+
+	public function calendars()
+	{
+  		return $this->hasMany(Calendar::class);
+  	}
 }

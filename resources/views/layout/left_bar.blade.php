@@ -6,21 +6,27 @@
 
                             <li>
                                 <a href="/" class="waves-effect waves-primary">
-                                    <i class="ti-home"></i><span> Panel </span>
+                                    <i class="fa fa-home"></i><span> Panel </span>
                                 </a>
                             </li>
 
 
                             <li>
                                 <a href="{{ action('ClientController@index') }}" class="waves-effect waves-primary">
-                                    <i class="ti-stats-up"></i><span> Clientes </span>
+                                    <i class="fa fa-address-book-o"></i><span> Clientes </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ action('MonthlyClientController@index') }}" class="waves-effect waves-primary">
+                                    <i class="fa fa-address-card-o"></i><span> Comparativa </span>
                                 </a>
                             </li>
 
 @if (\Auth::user()->hasAnyRole(['manager', 'admin']))
                             <li>
                                 <a href="{{ action('ImportController@edit') }}" class="waves-effect waves-primary">
-                                    <i class="ti-upload"></i><span> Cargar Archivo </span>
+                                    <i class="fa fa-upload"></i><span> Cargar Archivo </span>
                                 </a>
                             </li>
 @endif
@@ -46,7 +52,7 @@
                             <li>
                                 <a href="{{ route('logout') }}" class="waves-effect waves-primary" 
                                 onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                                    <i class="ti-back-left"></i><span> Logout </span>
+                                    <i class="fa fa-sign-out"></i><span> Logout </span>
                                 </a>
                             </li>
 

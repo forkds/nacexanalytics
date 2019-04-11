@@ -162,4 +162,39 @@ class Client extends Model
         return $items;
     }
 
+    public function getMonthlyBillings ($client_id, $year)
+    {
+        $items = DB::table('billings AS BIL')
+                ->join('clients AS CLI', function ($join)
+                    {
+                        $join->on('CLI.id', '=', 'BIL.client_id');
+                    })
+                ->where('CLI.id', '=', $client_id)
+                ->where('BIL.year',$year)
+                ->selectRaw("BIL.client_id, BIL.year, BIL.month, sum(BIL.billing) as amount")
+                ->groupBy('BIL.client_id', 'BIL.year', 'BIL.month')
+                ->get();
+
+        return $items;
+    }
+
+    public function getMonthlyBillingsByOffice ($office_id, $year)
+    {
+        $items = DB::table('billings AS BIL')
+                ->join('clients AS CLI', function ($join)
+                    {
+                        $join->on('CLI.id', '=', 'BIL.client_id');
+                    })
+                ->join('offices AS OFI', function ($join)
+                    {
+                        $join->on('OFI.id', '=', 'CLI.office_id'); 
+                })
+                ->where('OFI.id', '=', $office_id)
+                ->where('BIL.year',$year)
+                ->selectRaw("BIL.client_id, BIL.year, BIL.month, sum(BIL.billing) as amount")
+                ->groupBy('BIL.client_id', 'BIL.year', 'BIL.month')
+                ->get();
+
+        return $items;
+    }
 }
