@@ -8,7 +8,7 @@
             <div class="card-box">
                 <form 
                     id="page-form" 
-                    action="{{ action ('ImportController@upload') }}" 
+                    action="{{ action ('CalendarController@upload') }}" 
                     method="POST"
                     class="form-horizontal"
                     enctype="multipart/form-data"
@@ -18,19 +18,6 @@
                     {{ csrf_field() }}
 
                     <input type="hidden" name="office_id" value="{{ $office_id }}">
-
-                    <div class="form-row">
-                        <div class="form-group col-sm-2">
-
-                            <label class="">{{ trans('import.YEAR_LABEL') }}</label>
-                            <input class="form-control" 
-                                    type="text" 
-                                    name="year" 
-                                    placeholder="{{ trans('import.PH_YEAR') }}" 
-                                    value="{{ old('year', '') }}">
-
-                        </div>
-                    </div>
 
                     <div class="form-row">
                         <div class="form-group col-sm-6">
@@ -69,9 +56,7 @@
 
 
             </div>
-
         </div>
-
     </div>
 
     <!-- Trigger the modal with a button -->
@@ -91,15 +76,23 @@
             
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
             
-                        <h4 class="modal-title">Importación de datos:</h4>
+                        <h4 class="modal-title">Importación de datos: calendario</h4>
                     
                     </div>
                 
                     <div class="modal-body bg-default">
                         
-                        <p>El documento ha importar corresponde al documento xxx de DIANA.</p>
-                        <p>El proceso de importación documento ha seleccionar corresponde al documento xxx de DIANA.</p>
-                    
+<p>El calendario permite importar los días laborables por cada mes y año.</p>
+<p>Mediante los días laborales la plataforma puede calcular el ratio de facturación (mensual o anual) por días trabajados</p>
+<p>Si no se ha importado el calendario o no se ha definido para un año concreto, se considerarán 20 días laborales mensuales por defecto.</p>
+<hr>
+<p>El documento ha importar ha de ser un documento de Microsoft Excel (xls o xlsx)</p>
+<p>Ha de incluir las siguientes columnas en la primera fila:</p>
+<p>'Periodo' 'Ene' 'Feb' 'Mar' Abr' May' 'Jun' 'Jul' 'Ago' 'Sep' 'Oct' 'Nov' 'Dic'</p>
+<p>El contenido de cada columna ha de ser un número entero</p>
+<hr>
+<p>La importación borrará previamente los datos almacenados de cada periodo.</p>
+
                     </div>
               
                     <div class="modal-footer">

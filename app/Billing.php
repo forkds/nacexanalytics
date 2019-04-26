@@ -13,6 +13,14 @@ class Billing extends Model
 
     protected $fillable = ['client_id', 'year', 'month', 'billing'];
 
+    protected $office_id;
+
+    function __construct($id = 0) 
+    {
+        # Setting var office_id
+        $this->office_id = $id;
+    }
+
     public function clients()
     {
       return $this->belongsTo(Client::class);
@@ -42,7 +50,7 @@ class Billing extends Model
         ->get();
     }
 
-    public function getAmmountMonthlyByIdOffice ($id)
+    public function getAmmountMonthlyByIdOffice ()
     {
         $items = DB::table('offices AS OFI')
         ->join('clients AS CLI', function ($join)
@@ -53,7 +61,7 @@ class Billing extends Model
             {
                 $join->on('CLI.id', '=', 'BIL.client_id'); 
         })
-        ->where('OFI.id', '=', $id)
+        ->where('OFI.id', '=', $this->office_id)
         ->selectraw('BIL.year AS year, BIL.month AS month, sum(BIL.billing) as amount')
         ->groupBy('BIL.year', 'BIL.month')
         ->orderBy('BIL.year')
@@ -63,7 +71,7 @@ class Billing extends Model
         return $items;
     }
 
-    public function getAmmountAnnualByIdOffice ($id)
+    public function getAmmountAnnualByIdOffice ()
     {
         $items = DB::table('offices AS OFI')
         ->join('clients AS CLI', function ($join)
@@ -74,7 +82,7 @@ class Billing extends Model
             {
                 $join->on('CLI.id', '=', 'BIL.client_id'); 
         })
-        ->where('OFI.id', '=', $id)
+        ->where('OFI.id', '=', $this->office_id)
         ->selectraw('BIL.year AS year, sum(BIL.billing) as amount')
         ->groupBy('BIL.year')
         ->orderBy('BIL.year')
@@ -200,5 +208,78 @@ class Billing extends Model
         $moths[12] = 'diciembre';
 
         return $moths;
+    }
+
+    public function getRatioByYear ($billings, $calendars)
+    {
+        $ratios = clone ($billings);
+
+        $office_model = new Office;
+
+        $days = 20;
+
+        foreach ($ratios as $ratio)
+        {
+            $year = (int)$ratio->year;
+
+            $calendar = $office_model->find($this->office_id)->calendars()->where('year', $year)->first();
+
+            if ($calendar)
+            {
+                $days = 0;
+                $days+= (int)$calendar['m1'];
+                $days+= (int)$calendar['m2'];
+                $days+= (int)$calendar['m3'];
+                $days+= (int)$calendar['m4'];
+                $days+= (int)$calendar['m5'];
+                $days+= (int)$calendar['m6'];
+                $days+= (int)$calendar['m7'];
+                $days+= (int)$calendar['m8'];
+                $days+= (int)$calendar['m9'];
+                $days+= (int)$calendar['m10'];
+                $days+= (int)$calendar['m11'];
+                $days+= (int)$calendar['m12'];
+            }
+
+            $ratio->amount/= $days;
+
+        }
+
+        return $ratios;
+    }
+
+    public function getRatioByMonth ($billings, $calendars)
+    {
+        $ratios = clone ($billings);
+
+        $office_model = new Office;
+
+
+        $year_tmp = 0;
+
+        foreach ($ratios as $ratio)
+        {
+            $year = (int)$ratio->year;
+
+            if ($year != $year_tmp)
+            {
+                $calendar = $office_model->find($this->office_id)->calendars()->where('year', $year)->first();
+                $year_tmp = $year;
+            }
+
+            $days = 20;
+
+            if ($calendar)
+            {
+                $month = (int)$ratio->month;
+
+                $days  = (int)$calendar['m' . $month];
+            }
+
+            $ratio->amount/= $days;
+
+        }
+
+        return $ratios;
     }
 }

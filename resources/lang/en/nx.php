@@ -1,0 +1,11 @@
+<?php
+
+return [
+    'IMPORT_CALENDAR_PAGE_TITLE' => 'IMPORTACIÓN DE DATOS: CALENDARIO',
+
+
+    'PANEL_LABEL_GRAPH_RATIO_MONTH' => 'EVOLUCION MENSUAL: RATIO',
+    'PANEL_LABEL_GRAPH_RATIO_YEAR'  => 'EVOLUCION ANUAL: RATIO',
+    'PANEL_INFO_NO_DATA'            => 'No se han encontrado datos.',
+
+];

@@ -7,6 +7,8 @@ use App\Client;
 use App\Billing;
 use App\Office;
 use App\Calendar;
+use App\Express;
+use App\Lib;
 
 class ClientController extends Controller
 {
@@ -76,45 +78,89 @@ class ClientController extends Controller
             abort (301, "No tiene autorización para acceder a este recurso");
         }
 
+        # Get Billings model
+        $bModel = new Billing ($id);
+
+        # Prepare Express Monthly Info
+        $bMonthlyItems      = $bModel->getAmmountMonthlyByIdClient ($id);
+        $bMonthlyGraph      = Lib::getGraphDataByMonth ($bMonthlyItems);
+        $bMonthlyMaxValue   = Lib::getMaxValue($bMonthlyItems);
+        $bMonthlyGraphScale = Lib::getGraphScale($bMonthlyMaxValue);
+        $bMonthlyLabel      = trans('nacex-analytics.CLIENT_MONTHLY_GRAPH_LABEL');
+
+        # Prepare Express Annual Info
+        $bAnnualItems      = $bModel->getAmmountAnnualByIdClient ($id);
+        $bAnnualGraph      = Lib::getGraphDataByYear ($bAnnualItems);
+        $bAnnualMaxValue   = Lib::getMaxValue($bAnnualItems);
+        $bAnnualGraphScale = Lib::getGraphScale($bAnnualMaxValue);
+        $bAnnualLabel      = trans('nacex-analytics.CLIENT_MONTHLY_GRAPH_LABEL');
+
+        # Prepare Billing Page Info
+        $bByMonth = [
+            'items' => $bMonthlyItems,
+            'graph' => $bMonthlyGraph,
+            'scale' => $bMonthlyGraphScale,
+            'label' => $bMonthlyLabel,
+                    ];
+        $bByYear  = [
+            'items' => $bAnnualItems,
+            'graph' => $bAnnualGraph,
+            'scale' => $bAnnualGraphScale,
+            'label' => $bAnnualLabel,
+                    ];
+        # Get Express model
+        $xModel = new Express($id);
+
+        # Prepare Express Monthly Info
+        $xMonthlyItems      = $xModel->getAmmountMonthlyByIdClient ($id);
+        $xMonthlyGraph      = Lib::getGraphDataByMonth ($xMonthlyItems, $bMonthlyItems);
+        $xMonthlyMaxValue   = Lib::getMaxValue($xMonthlyItems);
+        $xMonthlyGraphScale = Lib::getGraphScale($xMonthlyMaxValue);
+        $xMonthlyLabel      = trans('nacex-analytics.CLIENT_ANNUAL_GRAPH_LABEL_EXPRESS');
+
+        # Prepare Express Annual Info
+        $xAnnualItems      = $xModel->getAmmountAnnualByIdClient ($id);
+        $xAnnualGraph      = Lib::getGraphDataByYear ($xAnnualItems, $bAnnualItems);
+        $xAnnualMaxValue   = Lib::getMaxValue($xAnnualItems);
+        $xAnnualGraphScale = Lib::getGraphScale($xAnnualMaxValue);
+        $xAnnualLabel      = trans('nacex-analytics.CLIENT_ANNUAL_GRAPH_LABEL_EXPRESS');
+
+        # Prepare Express Page Info
+        $xByMonth = [
+            'items' => $xMonthlyItems,
+            'graph' => $xMonthlyGraph,
+            'scale' => $xMonthlyGraphScale,
+            'label' => $xMonthlyLabel,
+                    ];
+        $xByYear  = [
+            'items' => $xAnnualItems,
+            'graph' => $xAnnualGraph,
+            'scale' => $xAnnualGraphScale,
+            'label' => $xAnnualLabel,
+                    ];
+
+        # Prepare Page Info
+        $graphData = [];
+
+        $graphData[] = [$bByMonth, $bByYear];
+        $graphData[] = [$xByMonth, $xByYear];
+
         # Get current client
-        $items = Client::find($id);
+        $client = Client::findorFail($id);
 
-        # Get billings for this client
-        $modelBilling    = new Billing;
-        $monthlyBillings = $modelBilling->getAmmountMonthlyByIdClient ($id);
-        $annualBillings  = $modelBilling->getAmmountAnnualByIdClient ($id);
-
-        # Get monthly graph data for this client
-        $monthlyGraph = $this->getGraphDataByMonth ($monthlyBillings);
-
-        # Get annual graph data for this client
-        $annualGraph  = $this->getGraphDataByYear ($annualBillings);
-
-        // filterin clients by current office_id
-        $model   = new Client;
-        $clients = $model->where('office_id','=', $office_id)->get();
-
-        $annualGraphLabel = trans('nacex-analytics.CLIENT_ANNUAL_GRAPH_LABEL');
-        //$annualGraphLabel.= $items->code . '-' . $items->name;
-
-        $monthlyGraphLabel = trans('nacex-analytics.CLIENT_MONTHLY_GRAPH_LABEL');
-        //$monthlyGraphLabel.= $items->code . '-' . $items->name;
+        # Get clients for select box
+        $clients = Office::findOrFail($office_id)->clients()->get();
 
         $pageTitle = trans ('nacex-analytics.CLIENT_PAGE_TITLE');
-        $pageTitle.= $items->code . '-' . $items->name;
+        $pageTitle.= $client->code . '-' . $client->name;
 
         // setting view params
-        $params['items']              = $items;
-        $params['billings']           = $monthlyBillings;
-        $params['monthlyGraph']       = $monthlyGraph;
-        $params['annualGraph']        = $annualGraph;
-        $params['annualGraphLabel']   = $annualGraphLabel;
-        $params['monthlyGraphLabel']  = $monthlyGraphLabel;
         $params['pageTitle']          = $pageTitle;
         $params['select']             = $this->toSelectByCode ($clients);
         $params['id']                 = $id;
         $params['prev_id']            = $this->getPrevId ($id);
         $params['post_id']            = $this->getPostId ($id);
+        $params['arrayGraph']            = $graphData;
 
         // return view
         return view ('client', $params);

@@ -17,10 +17,15 @@ Route::post ('/password/change', 'UsuarioController@passwordChange');
 Route::redirect('/', '/panel');
 
 Route::get('/import', 'ImportController@edit');
+Route::get('/import-inmediatos', 'ImportExpressController@edit');
+Route::get('/import-calendario', 'CalendarController@edit');
 
-Route::post('/import', 'ImportController@upload');
+Route::post('/import/billings', 'ImportController@upload');
+Route::post('/import/express',  'ImportExpressController@upload');
+Route::post('/import/calendar', 'CalendarController@upload');
 
 Route::get('/import/file', 'ImportController@import');
+Route::get('/import/file-inmediatos', 'ImportExpressController@import');
 
 Route::get('/test', 'LayoutController@test');
 
@@ -52,6 +57,8 @@ Route::get('/active-office', function()
 	return "Redirect de offina activa";
 });
 
+
+Route::get('/concepts', 'ConceptController@index');
 
 Auth::routes();
 

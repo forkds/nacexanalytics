@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Imports\Imports;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
@@ -8,10 +9,12 @@ use Illuminate\Http\UploadedFile;
 use \App\Client;
 use \App\Office;
 use \App\Billing;
-use \App\Import;
+use \App\ImportExpress;
+use \App\Lib;
 
-class ImportController extends Controller
+class ImportExpressController extends Controller
 {
+    //
     /**
      * Create a new controller instance.
      *
@@ -31,11 +34,11 @@ class ImportController extends Controller
 
 		# Get page title
 		$params['office_id'] = \Auth::user()->getActiveOffice()->id;
-		$params['pageTitle'] = trans('import.PAGE_TITLE');
-		$params['msgPreSubmit'] = trans('import.MSG_PRE_SUBMIT');
-		$params['btn_help'] = trans('import.LABEL_BTN_HELP');
+		$params['pageTitle'] = trans('import_express.PAGE_TITLE');
+		$params['msgPreSubmit'] = trans('import_express.MSG_PRE_SUBMIT');
+		$params['btn_help'] = trans('import_express.LABEL_BTN_HELP');
 
-        return view('import')->with($params);
+        return view('import_express')->with($params);
 	}
 
 	public function upload(Request $request)
@@ -51,30 +54,22 @@ class ImportController extends Controller
 		$data->request->add(['file_mime' => $file_mime]);
 
 		$arrayErrors = [
-			'year.required'  => trans('import.MSG_ERR_YEAR_REQUIRED'),
-			'year.digits'    => trans('import.MSG_ERR_YEAR_DIGITS'),
-			'year.in'        => trans('import.MSG_ERR_YEAR_IN'),
-			'excel.required' => trans('import.MSG_ERR_EXCEL_REQUIRED'),
-			'excel.max'      => trans('import.MSG_ERR_EXCEL_MAX'),
-			'file_ext.in'    => trans('import.MSG_ERR_FILE_EXT_IN'),
-			'file_mime.in'   => trans('import.MSG_ERR_FILE_MIME_IN'),
-			'file_upload.required' => trans('import.MSG_ERR_FILE_UPLOAD_REQUIRED'),
+			'excel.required' => trans('import_express.MSG_ERR_EXCEL_REQUIRED'),
+			'excel.max'      => trans('import_express.MSG_ERR_EXCEL_MAX'),
+			'file_ext.in'    => trans('import_express.MSG_ERR_FILE_EXT_IN'),
+			'file_mime.in'   => trans('import_express.MSG_ERR_FILE_MIME_IN'),
+			'file_upload.required' => trans('import_express.MSG_ERR_FILE_UPLOAD_REQUIRED'),
 		];
 
 		$arrayValidations = [];
-		$arrayValidations['year']  = 'required|digits:4|in:2015,2016,2017,2018,2019';
 		$arrayValidations['excel'] = 'required|max:200';
 		$this->validate($data, $arrayValidations, $arrayErrors);
-
-		//$arrayValidations['file_upload'] = 'required';
-		//$this->validate($data, $arrayValidations, $arrayErrors);
 
 		$arrayValidations['file_ext'] = 'bail|required|in:xls';
 		$this->validate($data, $arrayValidations, $arrayErrors);
 
 		$arrayValidations['file_mime'] = 'required|in:application/vnd.ms-office';
 		$this->validate($data, $arrayValidations, $arrayErrors);
-
 
 		return $this->import ($data);
 	}
@@ -84,6 +79,7 @@ class ImportController extends Controller
         set_time_limit ( 500 );
 
 		$alerts = [];
+
 
         try {
             $excel = Excel::toArray(new Imports, $request->file('excel'));
@@ -95,7 +91,7 @@ class ImportController extends Controller
 
         $rows = $excel[0];
 
-        $import = new Import;
+        $import = new ImportExpress;
 
         $errors = $import->validation($rows);
 
@@ -103,27 +99,39 @@ class ImportController extends Controller
        	{
 			$alerts[] = [
 				'type'  => 'alert-danger', 
-				'msg'   => trans('import.MSG_IMPORT_ERR'),
+				'msg'   => trans('import_express.MSG_IMPORT_ERR'),
 				'lines' => $errors,
 			];
 	        
 	        return $this->edit()->with('alerts', $alerts);
     	}
 
-    	$office = Office::find($request->office_id);
+    	$office = Office::findOrFail($request->office_id);
     	$year   = $request->year;
-    	$bath   = 250;
+    	$batch  = 250;
 
-    	$modelBilling = new \App\Billing;
-		$modelBilling->insertImportFile ($office, $year, $rows, $bath);
+    	# Get first row
+    	$row = $rows[0];
+
+        # Convert Excel Date to Unixstamp
+        # $unixstamp = ( intval($row['fecha']) - 25569) * 86400;
+        $unixstamp = Lib::ExcelDateToUnixtimestamp ($row['fecha']);
+
+        # Get Year & Month from Unixstamp
+        $year  = date ('Y', intval($unixstamp));
+        $month = date ('m', intval($unixstamp));
+
+    	$modelExpress = new \App\Express ($office->id);
+		$modelExpress->insertImportFile ($year, $month, $rows, $batch);
 
 		$alerts[] = [
 			'type'  => 'alert-success', 
-			'msg'   => trans('import.MSG_IMPORT_OK'), 
+			'msg'   => trans('import_express.MSG_IMPORT_OK'), 
 			'lines' => [ 
-				trans('import.MSG_LINE_OK_NAME', ['name' => $request->file('excel')->getClientOriginalName()]),
-				trans('import.MSG_LINE_OK_YEAR', ['year' => $year]),
-				trans('import.MSG_LINE_OK_ROWS', ['rows' => count($rows)]),
+				trans('import_express.MSG_LINE_OK_NAME', ['name' => $request->file('excel')->getClientOriginalName()]),
+				trans('import_express.MSG_LINE_OK_YEAR',  ['year'  => $year]),
+				trans('import_express.MSG_LINE_OK_MONTH', ['month' => $month]),
+				trans('import_express.MSG_LINE_OK_ROWS',  ['rows'  => count($rows)]),
 			]
 		];
 

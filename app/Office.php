@@ -26,4 +26,9 @@ class Office extends Model
 	{
   		return $this->hasMany(Calendar::class);
   	}
+
+	public function concepts()
+	{
+  		return $this->hasMany(Concept::class);
+  	}
 }

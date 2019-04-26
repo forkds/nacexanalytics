@@ -24,31 +24,18 @@
                             </li>
 
 @if (\Auth::user()->hasAnyRole(['manager', 'admin']))
-                            <li>
-                                <a href="{{ action('ImportController@edit') }}" class="waves-effect waves-primary">
-                                    <i class="fa fa-upload"></i><span> Cargar Archivo </span>
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect waves-primary">
+                                    <i class="fa fa-upload"></i><span> Configuración </span> 
+                                    <span class="menu-arrow"></span> 
                                 </a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{ action('ImportController@edit') }}">Cargar facturación</a></li>
+                                    <li><a href="{{ action('ImportExpressController@edit') }}">Cargar inmediatos</a></li>
+                                    <li><a href="{{ action('CalendarController@edit') }}">Cargar calendario</a></li>
+                                </ul>
                             </li>
 @endif
-<!--
-                            <li>
-                                <a href="{{ action('LayoutController@analysis') }}" class="waves-effect waves-primary">
-                                    <i class="ti-search"></i><span> Análsis </span>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="{{ action('LayoutController@profile') }}" class="waves-effect waves-primary">
-                                    <i class="ti-settings"></i><span> Perfil </span>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="{{ action('UsuarioController@settings') }}" class="waves-effect waves-primary">
-                                    <i class="ti-settings"></i><span> Configuración </span>
-                                </a>
-                            </li>
--->
                             <li>
                                 <a href="{{ route('logout') }}" class="waves-effect waves-primary" 
                                 onclick="event.preventDefault();document.getElementById('logout-form').submit();">

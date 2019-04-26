@@ -2,31 +2,6 @@
 
 @section('content') 
 
-
-    <div class="row">
-        <div class="col-sm-8">
-            <div class="card-box">
-                <h4 class="m-t-0 m-b-20 header-title"><b>{{ $monthlyGraphLabel }}</b></h4>
-
-                <div class="line-chart">
-                    <svg style="height:300px;width:100%"></svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-4">
-            <div class="card-box">
-                <h4 class="m-t-0 m-b-20 header-title"><b>{{ $annualGraphLabel }}</b></h4>
-
-                <div class="bar-chart">
-                    <svg style="height:300px;width:100%"></svg>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <hr>
-
     <div class="row">
         <div class="col-sm-12">
         {{ Form::open(array('id' => 'form', 'url' => '/clientes/detalle', 'class' => ' form-inline')) }}
@@ -75,6 +50,39 @@
         </div>
     </div>
 
+    <hr>
+
+@for ($index = 0; $index < count($arrayGraph); $index++)
+
+@if ($arrayGraph[$index][1]['items']->isNotEmpty())
+
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="card-box">
+                <h4 class="m-t-0 m-b-20 header-title"><b>{{ $arrayGraph[$index][0]['label'] }}</b></h4>
+
+                <div class="line-chart{{ $index }}">
+                    <svg style="height:300px;width:100%"></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card-box">
+                <h4 class="m-t-0 m-b-20 header-title"><b>{{ $arrayGraph[$index][1]['label'] }}</b></h4>
+
+                <div class="bar-chart{{ $index }}">
+                    <svg style="height:300px;width:100%"></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@endif
+
+@endfor
+
+
 
 @endsection
 
@@ -109,52 +117,77 @@
     // Select2
     $(".select2").select2();
 
-    nv.addGraph(function() {
-        var lineChart = nv.models.lineChart();
-        var height = 300;
-        lineChart.useInteractiveGuideline(true);
-        lineChart.xAxis.tickFormat(d3.format(',0d'));
-        lineChart.yAxis.ticks(5);
-        lineChart.yAxis.tickFormat(d3.format(',.2f'));
-        lineChart.forceY([graphMinValue(), graphMaxValue()]);
+    var cnt;
 
-        var days = ["Ene", "Feb", "Mar", "Abr", "May", "Jun","Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+    for (cnt = 0; cnt < 3; cnt++) 
+    {
+        (function(index) 
+        {
 
-        lineChart.xAxis
-            .tickValues([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
-            .tickFormat(function(d){
-            return days[d]
+            nv.addGraph(function()
+            {
+                var chartId = '.line-chart'  + index + ' svg';
+                var lineChart = nv.models.lineChart();
+                var height = 300;
+
+                lineChart.useInteractiveGuideline(true);
+                lineChart.xAxis.tickFormat(d3.format(',0d'));
+                lineChart.yAxis.tickFormat(d3.format(',.0f'));
+                lineChart.yAxis.ticks(5);
+                lineChart.forceY([0, getMonthlyScale(index)]);
+
+                var days = ["Ene", "Feb", "Mar", "Abr", "May", "Jun","Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+
+                lineChart.xAxis
+                    .tickValues([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+                    .tickFormat(function(d){
+                    return days[d]
+                    });
+
+                d3.select(chartId).attr('perserveAspectRatio', 'xMinYMid').datum(getMonthlyGraphData(index)).transition().duration(500).call(lineChart);
+                
+                nv.utils.windowResize(lineChart.update);
+            
+                lineChart.update;
+
+                return lineChart;
             });
 
-        //lineChart.yDomain([0, max]);
+            nv.addGraph(function() 
+            {
+                var chartId = '.bar-chart'  + index + ' svg';
 
-        d3.select('.line-chart svg').attr('perserveAspectRatio', 'xMinYMid').datum(graphData()).transition().duration(500).call(lineChart);
-        nv.utils.windowResize(lineChart.update);
-        return lineChart;
-    });
+                var barChart = nv.models.discreteBarChart().x(function(d) {
+                    return d.label;
+                }).y(function(d) {
+                    return d.value;
+                }).staggerLabels(true).tooltips(true).showValues(false).duration(250);
+                barChart.xAxis.tickFormat(d3.format('.0d'));
+                barChart.yAxis.tickFormat(d3.format(',.0f'));
+                barChart.yAxis.ticks(5);
+                barChart.forceY([0, getAnnualScale(index)]);
+                //barChart.showYTicks(false);
+                d3.select(chartId).datum(getAnnualGraphData(index)).call(barChart);
 
-    nv.addGraph(function() {
-        var barChart = nv.models.discreteBarChart().x(function(d) {
-            return d.label;
-        }).y(function(d) {
-            return d.value;
-        }).staggerLabels(true).tooltips(true).showValues(false).duration(250);
-        barChart.yAxis.ticks(5);
-        barChart.xAxis.tickFormat(d3.format('0d'));
-        barChart.yAxis.tickFormat(d3.format('.0f'));
-        barChart.forceY([graphMinValue(), graphAnnualMaxValue()]);        
-        d3.select('.bar-chart svg').datum(annualGraphData()).call(barChart);
-        nv.utils.windowResize(barChart.update);
-        return barChart;
-    });
+                nv.utils.windowResize(barChart.update);
 
-    function annualGraphData() 
+                barChart.update;
+
+                return barChart;
+            });
+
+
+        })(cnt);
+    }
+
+    function getAnnualGraphData (index)
     {
         var arrayPHP = [];
 
-        arrayPHP = {!! json_encode($annualGraph) !!};
+        arrayPHP = {!! json_encode($arrayGraph) !!};
 
-        var arrayValuesIn  = arrayPHP['values'];
+        var arrayValuesIn  = arrayPHP[index][1]['graph']['values'];
+        
         var arrayValuesOut = [];
 
         for(var i=0; i<arrayValuesIn.length; i++)
@@ -173,75 +206,16 @@
         return arrayJS;
     }
 
-    function graphAnnualMaxValue() 
+    function getMonthlyGraphData (index)
     {
-        var maxValue = 0.0;
 
+        var arrayPHP  = [];
 
-        var arrayPHP = [];
-        var arrayJS  = [];
+        var arrayJSON = [];
 
-        arrayPHP = {!! json_encode($annualGraph) !!};
+        arrayJSON = {!! json_encode($arrayGraph) !!};
 
-        console.log (arrayPHP);
-
-        arrayJS  = arrayPHP['values'];
-
-
-        for(var i=0; i<arrayJS.length; i++)
-        {
-            var value = parseFloat(arrayJS[i]['value']);
-
-            console.log (maxValue);
-
-            if (value > maxValue)
-            {
-                maxValue = value;
-            }
-        }
-
-        return getMaxScale (maxValue);
-    }
-
-    function getMaxScale(value)
-    {
-        var maxValue = value;
-
-        var scale = 1;
-
-        for (var m=1; m<10; m++)
-        {
-            scale*=10;
-
-            if (scale > maxValue)
-            {
-                scale/=10;
-                break;
-            }
-        }
-
-        var testValue = scale;
-
-        for (var x=1; x<10; x++)
-        {
-            if (testValue > maxValue)
-            {
-                maxValue = testValue;
-                break;
-            }
-
-            testValue+= scale;
-        }
-
-        return maxValue;
-    }
-
-
-    function graphData() {
-
-        var arrayPHP = [];
-
-        arrayPHP = {!! json_encode($monthlyGraph) !!};
+        arrayPHP = arrayJSON[index][0]['graph'];
 
         var arrayJS = [];
 
@@ -270,129 +244,23 @@
         return arrayJS;
     }
 
-    function graphMaxValue() {
-
-        var maxValue = 0.0;
-
-        var arrayPHP = [];
-
-        arrayPHP = {!! json_encode($monthlyGraph) !!};
-
-        var arrayJS = [];
-
-        for(var i=0; i<arrayPHP.length; i++)
-        {
-            var arrayValores = [];
-
-            arrayValores = arrayPHP[i]['values'];
-
-            var ArraySalida = [];
-
-            for(var j=0; j<arrayValores.length; j++)
-            {
-                var ArrayPar = [];
-
-                var valorX = arrayValores[j]['x'];
-                var valorY = parseFloat(arrayValores[j]['y']);
-
-                if (valorY > maxValue)
-                {
-                    maxValue = valorY;
-                }
-            }
-
-        }
-
-        var scale = 1;
-
-        for (var m=1; m<6; m++)
-        {
-            scale*=10;
-
-            if (scale > maxValue)
-            {
-                scale/=10;
-                break;
-            }
-        }
-
-        var testValue = scale;
-
-        for (var x=1; x<15; x++)
-        {
-            if (testValue > maxValue)
-            {
-                maxValue = testValue;
-                break;
-            }
-
-            testValue+= scale;
-        }
-
-        return maxValue;
+    function getAnnualScale (index)
+    {
+        var arrayJSON = {!! json_encode($arrayGraph) !!};
+        var scale     = arrayJSON[index][1]['scale'];
+        
+        return parseFloat (scale);
     }
 
-    function graphMinValue() {
-
-        var minValue = 0.0;
-
-        var arrayPHP = [];
-
-        arrayPHP = {!! json_encode($monthlyGraph) !!};
-
-        var arrayJS = [];
-
-        for(var i=0; i<arrayPHP.length; i++)
-        {
-            var arrayValores = [];
-
-            arrayValores = arrayPHP[i]['values'];
-
-            var ArraySalida = [];
-
-            for(var j=0; j<arrayValores.length; j++)
-            {
-                var ArrayPar = [];
-
-                var valorX = arrayValores[j]['x'];
-                var valorY = parseFloat(arrayValores[j]['y']);
-
-                if (valorY < minValue)
-                {
-                    minValue = valorY;
-                }
-            }
-
-        }
-
-        var scale = 1;
-
-        for (var m=1; m<6; m++)
-        {
-            scale*=10;
-
-            if (scale > minValue)
-            {
-                scale/=10;
-                break;
-            }
-        }
-
-        var testValue = scale;
-
-        for (var x=1; x<15; x++)
-        {
-            if (testValue > minValue)
-            {
-                minValue = testValue-scale;
-                break;
-            }
-
-            testValue+= scale;
-        }
-
-        return minValue;
+    function getMonthlyScale (index)
+    {
+        var arrayJSON = {!! json_encode($arrayGraph) !!};
+        var scale     = arrayJSON[index][0]['scale'];
+        
+        return parseFloat (scale);
     }
+
+
 
 })(jQuery);        
 

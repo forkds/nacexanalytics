@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'PAGE_TITLE' => 'IMPORTACIÓN DE DATOS: FACTURACIÓN',
+    'PAGE_TITLE' => 'IMPORTACIÓN DE DATOS: INMEDIATOS',
     'YEAR_LABEL' => 'Seleccione el año: ',
     'FILE_LABEL' => 'Seleccione el documento: ',
     'SUBMIT_LABEL' => 'Importar documento',
@@ -12,8 +12,9 @@ return [
     'MSG_IMPORT_OK'  => "Importación realizada correctamente:",
 
     'MSG_LINE_OK_NAME'  => 'Documento: => :name',
-    'MSG_LINE_OK_YEAR' => 'Año: => :year',
-    'MSG_LINE_OK_ROWS' => 'Registros: => :rows',
+    'MSG_LINE_OK_YEAR'  => 'Año: => :year',
+    'MSG_LINE_OK_MONTH' => 'Mes: => :month',
+    'MSG_LINE_OK_ROWS'  => 'Registros: => :rows',
 
     'MSG_FMT_ERR_EMPTY' => 'Error: Documento sin filas.',
     'MSG_FMT_ERR_COLS'  => 'Error: Formato incorrecto. Se requieren :cols columnas.',

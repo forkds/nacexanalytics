@@ -17,6 +17,8 @@ class Imports implements ToModel, WithHeadingRow, WithValidation, WithBatchInser
     */
     public function model(array $row)
     {
+        
+/*
         return new Import([
 
             'cliente'    => $row['cliente'],
@@ -33,25 +35,34 @@ class Imports implements ToModel, WithHeadingRow, WithValidation, WithBatchInser
             'octubre'    => $row['octubre'],
             'noviembre'  => $row['noviembre'],
             'diciembre'  => $row['diciembre'],
+            'Fecha'   => $row['Fecha '],
+            'Client'  => $row['Cod. Cliente'],
+            'Billing' => $row['Econ_importe '],
+
             //
         ]);
+*/
     }
 
     public function rules(): array
     {
+    /*    
         return [
             'cliente' => 'required',
             'nombre' => 'required',
         ];
+    */
     }
 
 
     public function customValidationMessages()
     {
+        /*
         return [
             'cliente.required' => 'Please enter cliente',
             'nombre.required' => 'Please enter nombre',
         ];
+        */
     }   
              
     public function batchSize(): int

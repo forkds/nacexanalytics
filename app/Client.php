@@ -25,6 +25,11 @@ class Client extends Model
       return $this->hasMany(Billing::class);
     }
 
+    public function express()
+    {
+      return $this->hasMany(Express::class);
+    }
+
 
     public function index()
     {

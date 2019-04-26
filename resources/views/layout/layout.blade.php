@@ -200,7 +200,7 @@
 
                 $('.on-form-submit-hide').show(500);
 
-                $('.button-menu-mobile').click();
+                //$('.button-menu-mobile').click();
 
             });
 

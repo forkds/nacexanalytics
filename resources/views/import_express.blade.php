@@ -8,7 +8,7 @@
             <div class="card-box">
                 <form 
                     id="page-form" 
-                    action="{{ action ('ImportController@upload') }}" 
+                    action="{{ action ('ImportExpressController@upload') }}" 
                     method="POST"
                     class="form-horizontal"
                     enctype="multipart/form-data"
@@ -18,19 +18,6 @@
                     {{ csrf_field() }}
 
                     <input type="hidden" name="office_id" value="{{ $office_id }}">
-
-                    <div class="form-row">
-                        <div class="form-group col-sm-2">
-
-                            <label class="">{{ trans('import.YEAR_LABEL') }}</label>
-                            <input class="form-control" 
-                                    type="text" 
-                                    name="year" 
-                                    placeholder="{{ trans('import.PH_YEAR') }}" 
-                                    value="{{ old('year', '') }}">
-
-                        </div>
-                    </div>
 
                     <div class="form-row">
                         <div class="form-group col-sm-6">
@@ -69,9 +56,7 @@
 
 
             </div>
-
         </div>
-
     </div>
 
     <!-- Trigger the modal with a button -->
