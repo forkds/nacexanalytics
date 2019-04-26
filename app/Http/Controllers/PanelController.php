@@ -66,7 +66,7 @@ class PanelController extends Controller
         $xMonthlyGraph      = Lib::getGraphDataByMonth ($xMonthlyItems, $bMonthlyItems);
         $xMonthlyMaxValue   = Lib::getMaxValue($xMonthlyItems);
         $xMonthlyGraphScale = Lib::getGraphScale($xMonthlyMaxValue);
-        $xMonthlyLabel      = trans('nacex-analytics.PANEL_ANNUAL_GRAPH_LABEL_EXPRESS');
+        $xMonthlyLabel      = trans('nacex-analytics.PANEL_MONTHLY_GRAPH_LABEL_EXPRESS');
 
         # Prepare Express Annual Info
         $xAnnualItems      = $xModel->getAmmountAnnualByIdOffice ();
