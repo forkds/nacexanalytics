@@ -93,7 +93,7 @@ class ClientController extends Controller
         $bAnnualGraph      = Lib::getGraphDataByYear ($bAnnualItems);
         $bAnnualMaxValue   = Lib::getMaxValue($bAnnualItems);
         $bAnnualGraphScale = Lib::getGraphScale($bAnnualMaxValue);
-        $bAnnualLabel      = trans('nacex-analytics.CLIENT_MONTHLY_GRAPH_LABEL');
+        $bAnnualLabel      = trans('nacex-analytics.CLIENT_ANNUAL_GRAPH_LABEL');
 
         # Prepare Billing Page Info
         $bByMonth = [
@@ -116,7 +116,7 @@ class ClientController extends Controller
         $xMonthlyGraph      = Lib::getGraphDataByMonth ($xMonthlyItems, $bMonthlyItems);
         $xMonthlyMaxValue   = Lib::getMaxValue($xMonthlyItems);
         $xMonthlyGraphScale = Lib::getGraphScale($xMonthlyMaxValue);
-        $xMonthlyLabel      = trans('nacex-analytics.CLIENT_ANNUAL_GRAPH_LABEL_EXPRESS');
+        $xMonthlyLabel      = trans('nacex-analytics.CLIENT_MONTHLY_GRAPH_LABEL_EXPRESS');
 
         # Prepare Express Annual Info
         $xAnnualItems      = $xModel->getAmmountAnnualByIdClient ($id);
