@@ -46,6 +46,7 @@ class Imports implements ToModel, WithHeadingRow, WithValidation, WithBatchInser
 
     public function rules(): array
     {
+        return [];
     /*    
         return [
             'cliente' => 'required',

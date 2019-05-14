@@ -168,6 +168,7 @@ class Billing extends Model
                 [
                     'name' => $row['nombre'], 
                     'year' => $year
+                    'office_id' => $office->id
                 ]);            
 
             for ($x=1; $x<=12; $x++)

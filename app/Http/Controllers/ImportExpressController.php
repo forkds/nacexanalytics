@@ -106,6 +106,7 @@ class ImportExpressController extends Controller
 	        return $this->edit()->with('alerts', $alerts);
     	}
 
+
     	$office = Office::findOrFail($request->office_id);
     	$year   = $request->year;
     	$batch  = 250;
@@ -122,6 +123,7 @@ class ImportExpressController extends Controller
         $month = date ('m', intval($unixstamp));
 
     	$modelExpress = new \App\Express ($office->id);
+
 		$modelExpress->insertImportFile ($year, $month, $rows, $batch);
 
 		$alerts[] = [

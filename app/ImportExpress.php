@@ -26,7 +26,7 @@ class ImportExpress extends Model
     {
         $fields = [];
 
-        $fields['cod_cliente']      = 'string';
+        $fields['cod_cliente']      = 'string|nullable';
         $fields['fecha']            = 'double';
         $fields['econ_importe']     = 'double';
 
@@ -72,13 +72,18 @@ class ImportExpress extends Model
         {
             if ($row['cod_cliente'] === null)
             {
-                unset($rows[$row_id]);
+                # unset($rows[$row_id]);
+                $row['cod_cliente'] = '00000';
             }
             else
             {
                 foreach ($fields as $key => $field)
                 {
-                    if (getType($row[$key]) !== $field)
+                    $rules = explode ('|', $field);
+                    $type  = getType($row[$key]);
+
+                    if (!in_array($type, $rules))
+                    //if (getType($row[$key]) !== $field)
                     {
                         $errors[] = trans('import_express.MSG_FMT_ERR_ROW', ['row' => $cnt, 'col' => $key]);
                     }

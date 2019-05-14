@@ -38,16 +38,20 @@ class Express extends Model
 
         foreach ($rows as $row)
         {
+            # Check if @cod_client is empty
+            $cod_client = $row['cod_cliente'] != '' ? $row['cod_cliente'] : '00000';
+
             # If not exist client -> create
             $client = Client::firstOrCreate(
                 [
-                    'code'      => $row['cod_cliente'], 
+                    'code'      => $cod_client, 
                     'office_id' => $this->office_id
                 ], 
                 [
-                    'code' => '00000', 
-                    'name' => $row['cod_cliente'], 
-                    'year' => $year
+                    'code' => $cod_client, 
+                    'name' => 'No asignado', 
+                    'year' => $year,
+                    'office_id' => $this->office_id
                 ]);            
 
 
