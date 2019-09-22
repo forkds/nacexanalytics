@@ -47,7 +47,7 @@ class Billing extends Model
         ->groupBy('client_id', 'year')
         ->having('client_id', '=', $id)
         ->orderBy('year', 'asc')
-        ->get();
+        ->get()->toArray();
     }
 
     public function getAmmountMonthlyByIdOffice ()

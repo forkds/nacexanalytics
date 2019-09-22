@@ -15,6 +15,7 @@ Route::get  ('/password/change', 'UsuarioController@show')->name('profile');
 Route::post ('/password/change', 'UsuarioController@passwordChange');
 
 Route::redirect('/', '/panel');
+//Route::redirect('/home', '/panel');
 
 Route::get('/import', 'ImportController@edit');
 Route::get('/import-inmediatos', 'ImportExpressController@edit');
@@ -61,8 +62,6 @@ Route::get('/active-office', function()
 Route::get('/concepts', 'ConceptController@index');
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home')->middleware('role:usuario');
 
 Route::get('/controller', 'BillingsController@index');
 
