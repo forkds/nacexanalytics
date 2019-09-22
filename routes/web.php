@@ -104,5 +104,5 @@ Route::get('/clear-all', function() {
     $exitCode = Artisan::call('config:clear');
     $exitCode = Artisan::call('config:cache');
     //$exitCode = Composer::call('dump-autoload');
-    return '<h1>All creared cleared</h1>';
+    return '<h1>All cleared: [view:clear], [cache:clear], [config:clear], [config:cache]</h1>';
 });
