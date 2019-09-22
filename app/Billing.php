@@ -268,7 +268,7 @@ class Billing extends Model
                 $year_tmp = $year;
             }
 
-            $days = 20;
+            $days = 0;
 
             if ($calendar)
             {
@@ -276,6 +276,8 @@ class Billing extends Model
 
                 $days  = (int)$calendar['m' . $month];
             }
+
+            $days = $days == 0 ? 20 : $days;
 
             $ratio->amount/= $days;
 
