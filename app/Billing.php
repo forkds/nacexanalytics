@@ -47,7 +47,7 @@ class Billing extends Model
         ->groupBy('client_id', 'year')
         ->having('client_id', '=', $id)
         ->orderBy('year', 'asc')
-        ->get()->toArray();
+        ->get();
     }
 
     public function getAmmountMonthlyByIdOffice ()
@@ -168,7 +168,6 @@ class Billing extends Model
                 [
                     'name' => $row['nombre'], 
                     'year' => $year
-                    'office_id' => $office->id
                 ]);            
 
             for ($x=1; $x<=12; $x++)
@@ -242,7 +241,15 @@ class Billing extends Model
                 $days+= (int)$calendar['m12'];
             }
 
-            $ratio->amount/= $days;
+            if ($days > 0)
+            {
+                $ratio->amount/= $days;
+            }
+            else
+            {
+                $ratio->amount = 0;
+            }
+
 
         }
 
@@ -277,7 +284,7 @@ class Billing extends Model
                 $days  = (int)$calendar['m' . $month];
             }
 
-            $days = $days == 0 ? 20 : $days;
+            $days = $days ? $days : 20;
 
             $ratio->amount/= $days;
 
