@@ -116,11 +116,10 @@ class MonthlyClientController extends Controller
                     $average_0 = round($amount_0[$item->id][$x] / $lab_days_0[$x], 2);
                 }
 
-                if ((int) $lab_days_0[$1] > 0) 
+                if ((int) $lab_days_1[$x] > 0) 
                 {
                     $average_1 = round($amount_1[$item->id][$x] / $lab_days_1[$x], 2);
                 }
-
 
                 $data [$item->id][$x]['bil_day_0'] = $average_0;
                 $data [$item->id][$x]['bil_day_1'] = $average_1;
