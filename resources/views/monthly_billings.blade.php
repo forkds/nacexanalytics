@@ -19,6 +19,7 @@
 		            <thead>
 		                <tr>
 		                    <th>Cliente</th>
+                            <th>&nbsp;</th>
                             <th>Ene</th>
                             <th>Feb</th>
                             <th>Mar</th>
@@ -42,6 +43,18 @@
 
 						<tr>
 							<td>{{ $item->code }}-{{ $item->name }}</td>
+                            <td>
+                                <span class="legend" data-toggle="tooltip" data-placement="top" title="Facturación / Mes">€/Mes</span><br>
+                                <span class="legend" data-toggle="tooltip" data-placement="top" title="Días trabajados">Lab/m</span><br>
+                                <span class="legend" data-toggle="tooltip" data-placement="top" title="Facturación / Día">€/Día</span><br>
+                                <hr>
+                                <span class="legend" data-toggle="tooltip" data-placement="top" title="Facturación / Mes (año anterior)">€/Mes</span><br>
+                                <span class="legend" data-toggle="tooltip" data-placement="top" title="Días trabajados (año anterior)">Lab/m</span><br>
+                                <span class="legend" data-toggle="tooltip" data-placement="top" title="Facturación / Día (año anterior)">€/Día</span><br>
+                                <hr>
+                                <span class="legend" data-toggle="tooltip" data-placement="top" title="Diferencia interanual">Dif</span><br>
+                            </td>
+
 
 <?php for ($x=1; $x <= 12; $x++) : ?>
 
@@ -61,7 +74,7 @@
                                 {{ $data[$item->id][$x]['lab_days_1'] }}<br>
                                 {{ $data[$item->id][$x]['bil_day_1'] }}<br>
                                 <hr>
-                                <span style="{{ $style2 }}">{{ $data[$item->id][$x]['bil_day_ratio'] }}</span><br>
+                                <span style="{{ $style2 }}">{{ $data[$item->id][$x]['bil_day_ratio'] }}%</span><br>
                             </td>
 
 <?php endfor; ?>

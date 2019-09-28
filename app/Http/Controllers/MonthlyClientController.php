@@ -126,7 +126,7 @@ class MonthlyClientController extends Controller
 
                 if ($average_1 > 0.0) :
                     
-                    $data [$item->id][$x]['bil_day_ratio'] = round(($average_0-$average_1)/$average_1, 2);
+                    $data [$item->id][$x]['bil_day_ratio'] = round(($average_0-$average_1)/$average_1*100, 2);
 
                 else :
 
