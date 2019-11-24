@@ -48,6 +48,11 @@ class MonthlyClientController extends Controller
         $amount_0 = [];
         $amount_1 = [];
 
+        $total_0  = [];
+        $total_1  = [];
+        $ratio_1  = [];
+
+
         $data = [];
 
 
@@ -56,6 +61,19 @@ class MonthlyClientController extends Controller
 
 
         foreach ($items as $item) :
+
+            $total_0[$item->id] = floatval($model->getAmmountAnnualByIdClientByYear($item->id, $year_0));
+            $total_1[$item->id] = floatval($model->getAmmountAnnualByIdClientByYear($item->id, $year_1));
+
+            if ($total_1[$item->id] == 0) {
+
+                $ratio_1[$item->id] = floatval(1);
+
+            } else {
+
+                $ratio_1[$item->id] = floatval($total_0[$item->id]/$total_1[$item->id]);
+            }
+
 
             for ($x=1; $x<=12; $x++) :
 
@@ -100,6 +118,12 @@ class MonthlyClientController extends Controller
 
         foreach ($items as $item) :
 
+
+            $data [$item->id]['total_0'] = $total_0[$item->id];
+            $data [$item->id]['total_1'] = $total_1[$item->id];
+            $data [$item->id]['ratio_1'] = $ratio_1[$item->id];
+
+
             for ($x=1; $x<=12; $x++) :
 
                 $data [$item->id][$x]['bil_month_0'] = $amount_0[$item->id][$x];
@@ -113,12 +137,12 @@ class MonthlyClientController extends Controller
 
                 if ((int) $lab_days_0[$x] > 0) 
                 {
-                    $average_0 = round($amount_0[$item->id][$x] / $lab_days_0[$x], 2);
+                    $average_0 = round($amount_0[$item->id][$x] / $lab_days_0[$x], 1);
                 }
 
                 if ((int) $lab_days_1[$x] > 0) 
                 {
-                    $average_1 = round($amount_1[$item->id][$x] / $lab_days_1[$x], 2);
+                    $average_1 = round($amount_1[$item->id][$x] / $lab_days_1[$x], 1);
                 }
 
                 $data [$item->id][$x]['bil_day_0'] = $average_0;
@@ -126,7 +150,7 @@ class MonthlyClientController extends Controller
 
                 if ($average_1 > 0.0) :
                     
-                    $data [$item->id][$x]['bil_day_ratio'] = round(($average_0-$average_1)/$average_1*100, 2);
+                    $data [$item->id][$x]['bil_day_ratio'] = round(($average_0-$average_1)/$average_1*100, 1);
 
                 else :
 
@@ -145,6 +169,8 @@ class MonthlyClientController extends Controller
 
         $params['items'] = $items;
         $params['data']  = $data;
+        $params['year_0']  = $year_0;
+        $params['year_1']  = $year_1;
 
         // return view
         return view ('monthly_billings', $params);

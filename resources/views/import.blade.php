@@ -96,9 +96,21 @@
                     </div>
                 
                     <div class="modal-body bg-default">
-                        
-                        <p>El documento ha importar corresponde al documento xxx de DIANA.</p>
-                        <p>El proceso de importación documento ha seleccionar corresponde al documento xxx de DIANA.</p>
+
+                        <p>El documento ha importar corresponde al documento obtenido en:</p>
+                        <p><strong> "Listados >> 6.11 Estadísitcas cámara >> 6.11.2 ABC de clientes"</strong></p>
+                        <p>de la aplicación <strong>DIANA</strong>.</p>
+                        <p>Se ha de seleccionar:</p>
+                        <ul>
+                            <li>Desde Cliente: Dejas en blanco para exportar todos los clientes</li>
+                            <li>Año: El año que queremos exportar</li>
+                            <li>Mes de inicio: "1"</li>
+                            <li>Importes con IVA: "N"</li>
+                            <li>Agrupado por: "C"</li>
+                            <li>Destino impresion: "F"</li>
+                            <li>Exportar a: "E"</li>
+                        </ul>                        
+                        <p>El proceso de importación actualiza la información almacenada <strong>del año seleccionado</strong> por la nueva información del documento importado, por lo que se puede actualzar tantas veces como sea necesario. Por ejemplo por si ha sido necesaria modficiar alguna/s factura/s en DIANA y se realiza una nueva importación del documento <strong>"ABC de clientes"<strong>.<p>
                     
                     </div>
               

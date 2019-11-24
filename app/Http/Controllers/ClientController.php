@@ -79,10 +79,14 @@ class ClientController extends Controller
         }
 
         # Get Billings model
-        $bModel = new Billing ($id);
+        $bModel = new Billing ($office_id);
 
-        # Prepare Express Monthly Info
+        # Get Calendar model
+        $cModel = new Calendar ($office_id);
+
+        # Prepare Monthly Info
         $bMonthlyItems      = $bModel->getAmmountMonthlyByIdClient ($id);
+
         $bMonthlyGraph      = Lib::getGraphDataByMonth ($bMonthlyItems);
         $bMonthlyMaxValue   = Lib::getMaxValue($bMonthlyItems);
         $bMonthlyGraphScale = Lib::getGraphScale($bMonthlyMaxValue);
@@ -108,6 +112,70 @@ class ClientController extends Controller
             'scale' => $bAnnualGraphScale,
             'label' => $bAnnualLabel,
                     ];
+        
+        # get Calendars
+        $office_model = new Office();
+        $calendars = $office_model->findOrFail($office_id)->calendars()->get();
+
+
+        # Prepare Ratios Monthly Info;
+        $rMonthlyItems      = $bModel->getRatioByMonth ($bMonthlyItems, $calendars);
+        $rMonthlyGraph      = Lib::getGraphDataByMonth ($rMonthlyItems, $bMonthlyItems);
+        $rMonthlyMaxValue   = Lib::getMaxValue($rMonthlyItems);
+        $rMonthlyGraphScale = Lib::getGraphScale($rMonthlyMaxValue);
+        $rMonthlyLabel      = trans('nx.PANEL_LABEL_GRAPH_RATIO_MONTH');
+
+        # Prepare Ratios Annual Info;
+        $rAnnualItems      = $bModel->getRatioByYear ($bAnnualItems, $calendars);
+        $rAnnualGraph      = Lib::getGraphDataByYear ($rAnnualItems);
+        $rAnnualMaxValue   = Lib::getMaxValue($rAnnualItems);
+        $rAnnualGraphScale = Lib::getGraphScale($rAnnualMaxValue);
+        $rAnnualLabel      = trans('nx.PANEL_LABEL_GRAPH_RATIO_YEAR');
+
+
+        # Prepare laboral days at year;
+        $cMonthlyItems      = $cModel->getRatioByMonth ($bMonthlyItems);
+        $cMonthlyGraph      = Lib::getGraphDataByMonth ($cMonthlyItems, $bMonthlyItems);
+        $cMonthlyMaxValue   = Lib::getMaxValue($cMonthlyItems);
+        $cMonthlyGraphScale = Lib::getGraphScale($cMonthlyMaxValue);
+        $cMonthlyLabel      = trans('nx.PANEL_LABEL_GRAPH_RATIO_MONTH_DAYS');
+
+        # Prepare laboral days at month;
+        $cAnnualItems      = $cModel->getRatioByYear ($bAnnualItems, $calendars);
+        $cAnnualGraph      = Lib::getGraphDataByYear ($cAnnualItems, $bAnnualItems);
+        $cAnnualMaxValue   = Lib::getMaxValue($cAnnualItems);
+        $cAnnualGraphScale = Lib::getGraphScale($cAnnualMaxValue);
+        $cAnnualLabel      = trans('nx.PANEL_LABEL_GRAPH_RATIO_YEAR_DAYS');
+
+        # Prepare Ratio Page Info
+        $rByMonth = [
+            'items' => $rMonthlyItems,
+            'graph' => $rMonthlyGraph,
+            'scale' => $rMonthlyGraphScale,
+            'label' => $rMonthlyLabel,
+                    ];
+        $rByYear  = [
+            'items' => $rAnnualItems,
+            'graph' => $rAnnualGraph,
+            'scale' => $rAnnualGraphScale,
+            'label' => $rAnnualLabel,
+                    ];
+        # Prepare Calendars Page Info
+        $cByMonth = [
+            'items' => $cMonthlyItems,
+            'graph' => $cMonthlyGraph,
+            'scale' => $cMonthlyGraphScale,
+            'label' => $cMonthlyLabel,
+                    ];
+
+        $cByYear  = [
+            'items' => $cAnnualItems,
+            'graph' => $cAnnualGraph,
+            'scale' => $cAnnualGraphScale,
+            'label' => $cAnnualLabel,
+                    ];
+                    
+
         # Get Express model
         $xModel = new Express($id);
 
@@ -137,12 +205,14 @@ class ClientController extends Controller
             'graph' => $xAnnualGraph,
             'scale' => $xAnnualGraphScale,
             'label' => $xAnnualLabel,
-                    ];
+                        ];
 
         # Prepare Page Info
         $graphData = [];
 
         $graphData[] = [$bByMonth, $bByYear];
+        $graphData[] = [$rByMonth, $rByYear];
+        $graphData[] = [$cByMonth, $cByYear];
         $graphData[] = [$xByMonth, $xByYear];
 
         # Get current client
@@ -160,7 +230,7 @@ class ClientController extends Controller
         $params['id']                 = $id;
         $params['prev_id']            = $this->getPrevId ($id);
         $params['post_id']            = $this->getPostId ($id);
-        $params['arrayGraph']            = $graphData;
+        $params['arrayGraph']         = $graphData;
 
         // return view
         return view ('client', $params);

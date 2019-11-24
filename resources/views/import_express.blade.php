@@ -82,8 +82,17 @@
                 
                     <div class="modal-body bg-default">
                         
-                        <p>El documento ha importar corresponde al documento xxx de DIANA.</p>
-                        <p>El proceso de importación documento ha seleccionar corresponde al documento xxx de DIANA.</p>
+                        <p>El documento ha importar corresponde al documento obtenido en:</p>
+                        <p><strong> "Listados >> 6.1 Albaranes >> 6.1.5 Listado de inmediatos"</strong></p>
+                        <p>de la aplicación <strong>DIANA</strong>.</p>
+                        <p>Se ha de seleccionar:</p>
+                        <ul>
+                            <li>Todo el mes a exportar</li>
+                            <li>Destino impresion: "F"</li>
+                            <li>Exportar a: "E"</li>
+                        </ul>
+                        <p>El proceso de importación actualiza la información almacenada <strong>del año y mes seleccionados</strong> por la nueva información del documento <strong>"Listado de inmediatos"</strong>, por lo que se puede actualzar tantas veces como sea necesario.<p>
+
                     
                     </div>
               

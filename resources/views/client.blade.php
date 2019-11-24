@@ -119,7 +119,7 @@
 
     var cnt;
 
-    for (cnt = 0; cnt < 3; cnt++) 
+    for (cnt = 0; cnt < 4; cnt++) 
     {
         (function(index) 
         {

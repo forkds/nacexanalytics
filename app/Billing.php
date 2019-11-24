@@ -224,21 +224,22 @@ class Billing extends Model
 
             $calendar = $office_model->find($this->office_id)->calendars()->where('year', $year)->first();
 
+            $days = 0;
+
             if ($calendar)
             {
-                $days = 0;
-                $days+= (int)$calendar['m1'];
-                $days+= (int)$calendar['m2'];
-                $days+= (int)$calendar['m3'];
-                $days+= (int)$calendar['m4'];
-                $days+= (int)$calendar['m5'];
-                $days+= (int)$calendar['m6'];
-                $days+= (int)$calendar['m7'];
-                $days+= (int)$calendar['m8'];
-                $days+= (int)$calendar['m9'];
-                $days+= (int)$calendar['m10'];
-                $days+= (int)$calendar['m11'];
-                $days+= (int)$calendar['m12'];
+                $days+= (int)$calendar['m1']>0?(int)$calendar['m1']:20;
+                $days+= (int)$calendar['m2']>0?(int)$calendar['m2']:20;
+                $days+= (int)$calendar['m3']>0?(int)$calendar['m3']:20;
+                $days+= (int)$calendar['m4']>0?(int)$calendar['m4']:20;
+                $days+= (int)$calendar['m5']>0?(int)$calendar['m5']:20;
+                $days+= (int)$calendar['m6']>0?(int)$calendar['m6']:20;
+                $days+= (int)$calendar['m7']>0?(int)$calendar['m7']:20;
+                $days+= (int)$calendar['m8']>0?(int)$calendar['m8']:20;
+                $days+= (int)$calendar['m9']>0?(int)$calendar['m9']:20;
+                $days+= (int)$calendar['m10']>0?(int)$calendar['m10']:20;
+                $days+= (int)$calendar['m11']>0?(int)$calendar['m11']:20;
+                $days+= (int)$calendar['m12']>0?(int)$calendar['m12']:20;
             }
 
             if ($days > 0)
@@ -247,7 +248,7 @@ class Billing extends Model
             }
             else
             {
-                $ratio->amount = 0;
+                $ratio->amount/= (20*12);
             }
 
 

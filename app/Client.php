@@ -202,4 +202,19 @@ class Client extends Model
 
         return $items;
     }
+
+    public function getAmmountAnnualByIdClientByYear ($id, $year)
+    {
+        $rs = Billing::selectRaw('client_id, year, sum(billing) as amount')
+        ->groupBy('client_id', 'year')
+        ->having('client_id', '=', $id)
+        ->having('year', '=', $year)
+        ->orderBy('year', 'asc')
+        ->first();
+
+        return $rs? $rs->amount:0.0;
+    }
+
+
+
 }

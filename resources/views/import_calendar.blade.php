@@ -83,15 +83,15 @@
                     <div class="modal-body bg-default">
                         
 <p>El calendario permite importar los días laborables por cada mes y año.</p>
-<p>Mediante los días laborales la plataforma puede calcular el ratio de facturación (mensual o anual) por días trabajados</p>
-<p>Si no se ha importado el calendario o no se ha definido para un año concreto, se considerarán 20 días laborales mensuales por defecto.</p>
+<p>Mediante los días laborales la plataforma puede calcular el ratio de facturación (mensual o anual) por días trabajados.</p>
+<p>Si no se ha importado el calendario, o no se ha definido para un año concreto, o el valor mensual de dias trabajados es 0, <strong>se considerarán 20 días laborales mensuales por defecto (240 anuales)</strong>.</p>
 <hr>
-<p>El documento ha importar ha de ser un documento de Microsoft Excel (xls o xlsx)</p>
+<p>El documento ha importar ha de ser un documento en formato <strong>Microsoft Excel (xls o xlsx)</strong>.</p>
 <p>Ha de incluir las siguientes columnas en la primera fila:</p>
-<p>'Periodo' 'Ene' 'Feb' 'Mar' Abr' May' 'Jun' 'Jul' 'Ago' 'Sep' 'Oct' 'Nov' 'Dic'</p>
+<p><strong>'Periodo' 'Ene' 'Feb' 'Mar' Abr' May' 'Jun' 'Jul' 'Ago' 'Sep' 'Oct' 'Nov' 'Dic'</strong></p>
 <p>El contenido de cada columna ha de ser un número entero</p>
 <hr>
-<p>La importación borrará previamente los datos almacenados de cada periodo.</p>
+<p>La importación actaulizará los datos almacenados para cada periodo, por lo que puede utilizarse siempre el mismo archivo Excel actualizando el valor de cada mes, y/o añadiendo un nuevo período (año).</p>
 
                     </div>
               

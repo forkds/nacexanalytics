@@ -172,4 +172,93 @@ class Calendar extends Model
     	}
     }
 
+
+    public function getRatioByYear ($billings, $calendars)
+    {
+        $ratios = clone ($billings);
+
+        $office_model = new Office;
+
+
+        foreach ($ratios as $ratio)
+        {
+            $year = (int)$ratio->year;
+
+            $calendar = $office_model->find($this->office_id)->calendars()->where('year', $year)->first();
+
+            $days = 0;
+
+            if ($calendar)
+            {
+                $days+= (int)$calendar['m1']>0?(int)$calendar['m1']:20;
+                $days+= (int)$calendar['m2']>0?(int)$calendar['m2']:20;
+                $days+= (int)$calendar['m3']>0?(int)$calendar['m3']:20;
+                $days+= (int)$calendar['m4']>0?(int)$calendar['m4']:20;
+                $days+= (int)$calendar['m5']>0?(int)$calendar['m5']:20;
+                $days+= (int)$calendar['m6']>0?(int)$calendar['m6']:20;
+                $days+= (int)$calendar['m7']>0?(int)$calendar['m7']:20;
+                $days+= (int)$calendar['m8']>0?(int)$calendar['m8']:20;
+                $days+= (int)$calendar['m9']>0?(int)$calendar['m9']:20;
+                $days+= (int)$calendar['m10']>0?(int)$calendar['m10']:20;
+                $days+= (int)$calendar['m11']>0?(int)$calendar['m11']:20;
+                $days+= (int)$calendar['m12']>0?(int)$calendar['m12']:20;
+            }
+
+            if ($days > 0)
+            {
+                $ratio->amount = $days;
+            }
+            else
+            {
+                $ratio->amount = (12 * 20); // Dafault labour days by month
+            }
+
+
+        }
+
+        return $ratios;
+    }
+
+    /*
+    /* @billings: obj [year, month, value]
+    /* @calnedars: obj [year, mo1, ,2, m3, ..., m11, m12]
+    /*
+    /* return $billings, replacing value by dats bay year&montf
+    */
+    public function getRatioByMonth ($billings)
+    {
+        $ratios = clone ($billings);
+
+        $office_model = new Office;
+
+        $year_tmp = 0;
+
+        foreach ($ratios as $ratio)
+        {
+            $year = (int)$ratio->year;
+
+            if ($year != $year_tmp)
+            {
+                $calendar = $office_model->find($this->office_id)->calendars()->where('year', $year)->first();
+                $year_tmp = $year;
+            }
+
+            $month_days = 0;
+
+            if ($calendar)
+            {
+                $month = (int)$ratio->month;
+
+                $month_days  = (int)$calendar['m' . $month];
+            }
+
+            $days = $month_days ? $month_days : 20;
+
+            $ratio->amount = $days;
+
+        }
+
+        return $ratios;
+    }
+
 }

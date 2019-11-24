@@ -19,3 +19,9 @@
 .legend {
     color:blue !important;
 }
+
+td.odd {
+
+    background-color: #dddddd;
+
+}
