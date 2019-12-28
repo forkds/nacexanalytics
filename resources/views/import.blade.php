@@ -105,11 +105,15 @@
                             <li>Desde Cliente: Dejas en blanco para exportar todos los clientes</li>
                             <li>Año: El año que queremos exportar</li>
                             <li>Mes de inicio: "1"</li>
+                            <li>Mes de fin: "12"</li>
                             <li>Importes con IVA: "N"</li>
                             <li>Agrupado por: "C"</li>
+                            <li>Comparativa: "N"</li>
                             <li>Destino impresion: "F"</li>
                             <li>Exportar a: "E"</li>
-                        </ul>                        
+                        </ul>        
+
+                        <p>Resto de parámetros: el valor por defecto.</p>                
                         <p>El proceso de importación actualiza la información almacenada <strong>del año seleccionado</strong> por la nueva información del documento importado, por lo que se puede actualzar tantas veces como sea necesario. Por ejemplo por si ha sido necesaria modficiar alguna/s factura/s en DIANA y se realiza una nueva importación del documento <strong>"ABC de clientes"<strong>.<p>
                     
                     </div>

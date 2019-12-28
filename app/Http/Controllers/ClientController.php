@@ -36,15 +36,20 @@ class ClientController extends Controller
 
         $year1 = date('Y')-2;
         $year2 = date('Y')-1;
+        $year3 = date('Y')-0;
 
-        // filterin clients by current office_id and resume y year
-        $items = $model->indexBillings($office_id, $year1, $year2);
+        // filtering clients by current office_id and resume y year
+        //$items = $model->indexBillings($office_id, $year1, $year2);
+        $items = $model->indexBillings1($office_id);
 
         $pageTitle = trans ('nacex-analytics.CLIENTS_PAGE_TITLE');
 
         // setting view params
+        $params = [];
+
         $params['year1']     = $year1;
         $params['year2']     = $year2;
+        $params['year3']     = $year3;
         $params['items']     = $items;
         $params['pageTitle'] = $pageTitle;
 

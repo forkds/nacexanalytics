@@ -51,10 +51,10 @@
                                 <hr>
                                 <span class="legend" data-toggle="tooltip" data-placement="top" title="Diferencia interanual">Dif</span><br>
                                 <hr>
-                                <span class="legend" data-toggle="tooltip" data-placement="top" title="Año anterior">{{$year_1}}</span><br>
                                 <span class="legend" data-toggle="tooltip" data-placement="top" title="Facturación / Mes (año anterior)">€/Mes</span><br>
                                 <span class="legend" data-toggle="tooltip" data-placement="top" title="Días trabajados (año anterior)">Lab/m</span><br>
                                 <span class="legend" data-toggle="tooltip" data-placement="top" title="Facturación / Día (año anterior)">€/Día</span><br>
+                                <span class="legend" data-toggle="tooltip" data-placement="top" title="Año anterior">{{$year_1}}</span><br>
                             </td>
 
 
@@ -79,10 +79,10 @@
                                     {{$data[$item->id][$x]['bil_day_ratio'] }}%
                                 </span><br>
                                 <hr>
-                                {{ $year_1 }}<br>
                                 {{ $data[$item->id][$x]['bil_month_1'] }}<br>
                                 {{ $data[$item->id][$x]['lab_days_1'] }}<br>
                                 {{ $data[$item->id][$x]['bil_day_1'] }}<br>
+                                {{ $year_1 }}<br>
                              
                             </td>
 

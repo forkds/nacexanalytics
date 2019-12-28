@@ -8,6 +8,11 @@ function axfInitDataTables ()
             "stateSave": true,
             "paging": false,
             "order": [5, 'desc'],
+            "fixedHeader": 
+                {
+                    "header": true,
+                    "headerOffset": 60
+                },
             "oLanguage": 
                 {
                     "sSearch": "Buscar",

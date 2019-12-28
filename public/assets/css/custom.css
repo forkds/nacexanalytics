@@ -20,8 +20,9 @@
     color:blue !important;
 }
 
-td.odd {
+table > tbody > tr:hover > td  {
 
-    background-color: #dddddd;
+    font-weight:bold !important;
+    cursor:pointer;
 
 }
